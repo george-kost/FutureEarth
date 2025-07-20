@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: futureearth
+      POSTGRES_USER: futureearth
+      POSTGRES_PASSWORD: futureearth
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks: [fe-network]
+
+  backend:
+    build: ./backend
+    container_name: backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/futureearth
+      SPRING_DATASOURCE_USERNAME: futureearth
+      SPRING_DATASOURCE_PASSWORD: futureearth
+    depends_on: [postgres]
+    networks: [fe-network]
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    depends_on: [backend]
+    networks: [fe-network]
+    ports:
+      - "80:80"
+    # IMPORTANT: No volumes mapping over /usr/share/nginx/html here.
+
+networks:
+  fe-network:
+
+volumes:
+  postgres-data:
