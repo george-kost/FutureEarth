@@ -10,7 +10,7 @@ services:
     networks: [fe-network]
 
   backend:
-    build: ./backend
+    build: backend
     container_name: backend
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/futureearth
@@ -22,7 +22,7 @@ services:
       - "8080:8080"
 
   frontend:
-    build: ./frontend
+    build: frontend
     container_name: frontend
     depends_on: [backend]
     networks: [fe-network]
